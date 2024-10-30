@@ -1,0 +1,188 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ProjectNr1
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            // deklaracja zmiennej identyfik. naciśninie klawisz
+            ConsoleKeyInfo SelectedFunctionality;
+            // wypisanie Metryki programu
+            Console.WriteLine(
+                "\n\n\t\t\t\tPROGRAM KALKULATOR umożliwia obliczanie wartości wybranych wielkości matematycznych");
+
+            // zapisanie wielokrotnego powtarzania wysołań kalkulatorów
+            do
+            {
+                // wypisanie MENU części głównej
+                Console.WriteLine("\n\n\t\tMENU części głównej progamu");
+                // wypisanie kolejbej pozycji MENU programu
+                Console.WriteLine("\n\t\tA. Kalkulator laboratoryjny");
+                Console.WriteLine("\n\t\tB. Kalkulator Indywidualny");
+                Console.WriteLine("\n\t\tX. Zakońć programę");
+                // wypisanie odpowiedzi dla użytkownika
+                Console.Write(
+                    "\n\n\t\tNaciśnij jeden z dozwolonych klawiszy (A, B, X) dla wybrania wymaganej funkcjonalności: ");
+                // wczytanie kodu naciśnietego klawisza (wybranej funcjonalności)
+                SelectedFunctionality = Console.ReadKey();
+                // rozpoznanie wybranej funkconalności
+                if (SelectedFunctionality.Key == ConsoleKey.A)
+                    // został wybrany kalkulator Laboratoryjny
+                    KalkulatorLaboratoryjny();
+                else if (SelectedFunctionality.Key == ConsoleKey.B)
+                    // został wybrany Kalkulator Indywidualny 
+                    KalkulatorIndywidualny();
+                else if (SelectedFunctionality.Key != ConsoleKey.X)
+                    // Eror
+                    Console.WriteLine("Niezadowolny znak");
+
+                // wyczyszczenie okna konsoli 
+                Console.Clear();
+            } while (SelectedFunctionality.Key != ConsoleKey.X);
+
+            // chwilowe zatrzymanie
+            Console.WriteLine("\n\n\t\tAutor programu: Oleksandr Khomenko");
+            Console.WriteLine("\n\t\tDzisiejsza data: {0}", DateTime.Now);
+            Console.Write("\n\n\n\t\tNaciśnij dowolny klawisz dla kontynuacji...");
+            Console.ReadKey();
+        } // od Main
+
+        #region Deklaracje metod z Kalkulatorami
+
+        static void KalkulatorLaboratoryjny()
+        {
+            // deklaracja zmiennej identyfik. naciśninie klawisz
+            ConsoleKeyInfo SelectedFunctionality;
+            // wilekorotne powtarzanie obliczań wielkości matematycznych
+            do
+            {
+                Console.Clear();
+                // wypisanie Metryki Kalkulatora Laboratoryjnego
+                Console.WriteLine("\n\t\tMENU Kalkulatora Laboratoryjnego");
+                Console.WriteLine("\n\n\t\tA. Obliczenie średnej arytmetycznej wyrazów ciągu liczbowego");
+                Console.WriteLine("\n\n\t\tB. Obliczenie wartości wielomianu n-tego stopnia");
+                Console.WriteLine("\n\n\t\tC. Obliczenie konwersji znakowego zapisu liczby na wartość");
+                Console.WriteLine("\n\n\t\tD. Obliczenie wartości symbolu Newtona");
+                Console.WriteLine("\n\n\t\tX. Wyjście z kalkulatora Laboratoryjnego");
+                // wypisanie odpowiedzi dla Użytkownika
+                Console.Write("\n\n\t\tNaciśnij dozwolony klawisz (A, B, C, D i X) dla wybrania jednej z oferowanych wunkcjonalności: ");
+                // wczytanie kodu naciśniętego klawisza
+                SelectedFunctionality = Console.ReadKey();
+                //rozpoznanie wybranej funkcjonalmości
+                Console.Clear();
+                switch (SelectedFunctionality.Key)
+                {
+                    case ConsoleKey.A: //potwierdzenie wybranej funkcjonalności
+                        Console.WriteLine(
+                            "\n\n\t\tWybrałeś funkcjonalność: A. Obliczenie średnej arytmetycznej wyrazów ciągu liczbowego");
+                            /* założenie projektowe
+                             1) kolejność danych wejściowych: n a1 a2 a3 ... an
+                             2) typ danych wczytywanych wartości: 
+                                n - liczba naturalna, czyli: >= 0 (typ ushort)
+                                a1, a2 - liczby rzeczywiste (np. 3.14 ) będą typu float
+                             3) warunek wejściowy:
+                                n > 0
+                            */
+                        
+                        // deklaracja zmiennych 
+                        ushort n; // liczność ciągu liczbowego
+                        float a; // wyrazy ciągu liczbowego
+                        float S; // dla sumy wyrazów
+                        float SrArytm; // obliczenie średnej wartości 
+                        // wczytywanie wartości n
+                        do
+                        {// wypisanie zaproszenia liczności ciągu liczbowego
+                            Console.Write("\n\t\tPodaj liczność ciągu liczbowego: ");
+                            // wczytanie liczności ciągu licz.
+                            while (!ushort.TryParse(Console.ReadLine(), out n))
+                            {//sygnalizacja błędu
+                                Console.WriteLine("\n\t\tError: w zapisie podanej liczności ciągu liczbowego wystąpił niedozwolony znak!");
+                                // ponownie wczytywanie zaproszenia 
+                                Console.Write("\n\t\tPodaj liczność ciągu liczbowego: ");
+                            }
+                        // n jest OK
+                        // sprawdzenie warunku wejściowego n > 0
+                        if (n == 0)
+                            // sygnalizacja błędu 
+                            Console.WriteLine("\n\n\t\t\n\t\tError: podana liczność ciągu liczbowego nie jest poprawna!");
+                            
+                        } while (n == 0);
+                        
+                        // obliczenie sumy ciągu liczbowego S = a1 + a2 + ... + an
+                        S = 0.0F; // początkowy stan obliczeń (warunek brzegowy)
+                        // iteracyjne obliczenie sumy wyrazów ciągu
+                        for (int i = 1; i <= n; i++)
+                        { // wypisywanie zaproszenia
+                          Console.Write("\n\t\tPodaj {0}-ą wartość wyrazu ciągu liczbowego: ", i);
+                          //wczytanie wartości i-tego ciągu liczbowego
+                          while (!float.TryParse(Console.ReadLine(), out a))
+                          {// sygnalizacja błędu
+                              Console.WriteLine(
+                                  "\n\n\t\tError: w zapisie {0}-ego wyrazu ciągu liczbowego wystąpił niedozwolony znak!");
+                              // ponownie wypisywanie zaproszenia
+                              Console.Write("\n\t\tPodaj {0}-ą wartość wyrazu ciągu liczbowego: ", i);
+                              
+                          }
+                          // iteracyjne sumowanie ciągu
+                          S += a;
+                        }
+                        // tutaj w zmiennej 'S' jest suma: S = a1 + a2 + a3
+                        SrArytm = S / n;
+                        // w formacie stałopozycyjnym (fixed-point)
+                        Console.WriteLine(
+                            "\n\n\t\tWyniki obliczeń: średnia aryfmetyczna wyczytanuch {0} wyrazów ciągu liczbowego jest równa: {1, 6:F2}",
+                            n, SrArytm);
+                        // w formacie wykładniczym
+                        Console.WriteLine(
+                            "\n\n\t\tWyniki obliczeń: średnia aryfmetyczna wyczytanuch {0} wyrazów ciągu liczbowego jest równa: {1, 6:E2}",
+                            n, SrArytm);
+                        // w formacie ustawianym domyślnie na podstawie wartości wypisywanej wielkości
+                        Console.WriteLine(
+                            "\n\n\t\tWyniki obliczeń: średnia aryfmetyczna wyczytanuch {0} wyrazów ciągu liczbowego jest równa: {1, 6:G}",
+                            n, SrArytm);
+                        break;
+                    case ConsoleKey.B:
+                        Console.WriteLine(
+                            "\n\n\t Wybrałeś funkcjonalność: B. Obliczenie wartości wielomianu n-tego stopnia");
+                        Console.WriteLine("\n\n\t\tPRZEPRASZAM, ale jestem w trakcie projektowania");
+                        break;
+                    case ConsoleKey.C:
+                        Console.WriteLine(
+                            "\n\n\t Wybrałeś funkcjonalność: C. Obliczenie konwersji znakowego zapisu liczby na wartość");
+                        Console.WriteLine("\n\n\t\tPRZEPRASZAM, ale jestem w trakcie projektowania");
+                        break;
+                    case ConsoleKey.D:
+                        Console.WriteLine("\n\n\t Wybrałeś funkcjonalność: D. Obliczenie wartości symbolu Newtona");
+                        Console.WriteLine("\n\n\t\tPRZEPRASZAM, ale jestem w trakcie projektowania");
+                        break;
+                    case ConsoleKey.X:
+                        Console.WriteLine("\n\n\t Wybrałeś X. Wyjście z kalkulatora Laboratoryjnego");
+                        break;
+                    default:
+                        Console.WriteLine("\n\n\t\tError: nacisnąłeś niedozwolony znak");
+                        break;
+                }
+                
+                Console.Write("\n\n\n\t\tNaciśnij dowolny klawisz dla kontynuacji...");
+                Console.ReadKey();
+        
+            } while (SelectedFunctionality.Key != ConsoleKey.X);
+
+        }
+
+        static void KalkulatorIndywidualny()
+        {
+            // wypisanie komunikatu
+            Console.WriteLine("\n\n\n\t\tPRZEPRASZAM, ale jestem w trakcie realizacji (implementacji)");
+            Console.Write("\n\n\n\t\tNaciśnij dowolny klawisz dla kontynuacji...");
+            Console.ReadKey();
+        }
+
+        #endregion
+    }
+}
