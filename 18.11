@@ -393,6 +393,7 @@ namespace ProjectNr1
                             "\n\n\t\tWynik obliczeń: cena jednostki paszy składającej się z kilku {0} składników jest równa {1, 6:F2}",
                             okn, okCenaJednostkiPaszy);
                         break;
+                }
                 // zatrzymanie 
                 Console.Write("\n\n\n\t\tNaciśnij dowolny klawisz dla kontynuacji...");
                 Console.ReadKey();
@@ -400,6 +401,7 @@ namespace ProjectNr1
         }
 
         #endregion
+
 
         #region Metody pomocnicze dla Kalkulatora Laboratoryjnego
 
