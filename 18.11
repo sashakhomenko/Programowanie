@@ -1,0 +1,541 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ProjectNr1
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            // deklaracja zmiennej identyfik. naciśninie klawisz
+            ConsoleKeyInfo okWybranaFunkcjonalność;
+            // wypisanie Metryki programu
+            Console.WriteLine(
+                "\n\n\t\t\t\tPROGRAM KALKULATOR umożliwia obliczanie wartości wybranych wielkości matematycznych");
+
+            // zapisanie wielokrotnego powtarzania wysołań kalkulatorów
+            do
+            {
+                // wypisanie MENU części głównej
+                Console.WriteLine("\n\n\t\tMENU części głównej progamu");
+                // wypisanie kolejbej pozycji MENU programu
+                Console.WriteLine("\n\t\tA. Kalkulator laboratoryjny");
+                Console.WriteLine("\n\t\tB. Kalkulator Indywidualny");
+                Console.WriteLine("\n\t\tX. Zakońć programę");
+                // wypisanie odpowiedzi dla użytkownika
+                Console.Write(
+                    "\n\n\t\tNaciśnij jeden z dozwolonych klawiszy (A, B, X) dla wybrania wymaganej funkcjonalności: ");
+                // wczytanie kodu naciśnietego klawisza (wybranej funcjonalności)
+                okWybranaFunkcjonalność = Console.ReadKey();
+                // rozpoznanie wybranej funkconalności
+                if (okWybranaFunkcjonalność.Key == ConsoleKey.A)
+                    // został wybrany kalkulator Laboratoryjny
+                    KalkulatorLaboratoryjny();
+                else if (okWybranaFunkcjonalność.Key == ConsoleKey.B)
+                    // został wybrany Kalkulator Indywidualny 
+                    KalkulatorIndywidualny();
+                else if (okWybranaFunkcjonalność.Key != ConsoleKey.X)
+                    // Eror
+                    Console.WriteLine("Niezadowolny znak");
+
+                // wyczyszczenie okna konsoli 
+                Console.Clear();
+            } while (okWybranaFunkcjonalność.Key != ConsoleKey.X);
+
+            // chwilowe zatrzymanie
+            Console.WriteLine("\n\n\t\tAutor programu: Oleksandr Khomenko");
+            Console.WriteLine("\n\t\tDzisiejsza data: {0}", DateTime.Now);
+            Console.Write("\n\n\n\t\tNaciśnij dowolny klawisz dla kontynuacji...");
+            Console.ReadKey();
+        } // od Main
+
+        #region Deklaracje metod z Kalkulatorami
+
+        static void KalkulatorLaboratoryjny()
+        {
+            // deklaracja zmiennej identyfik. naciśninie klawisz
+            ConsoleKeyInfo okWybranaFunkcjonalność;
+            // wilekorotne powtarzanie obliczań wielkości matematycznych
+            do
+            {
+                Console.Clear();
+                // wypisanie Metryki Kalkulatora Laboratoryjnego
+                Console.WriteLine("\n\t\tMENU Kalkulatora Laboratoryjnego");
+                Console.WriteLine("\n\n\t\tA. Obliczenie średnej arytmetycznej wyrazów ciągu liczbowego");
+                Console.WriteLine("\n\n\t\tB. Obliczenie wartości wielomianu n-tego stopnia");
+                Console.WriteLine("\n\n\t\tC. Obliczenie konwersji znakowego zapisu liczby na wartość");
+                Console.WriteLine("\n\n\t\tD. Obliczenie wartości symbolu Newtona");
+                Console.WriteLine("\n\n\t\tX. Wyjście z kalkulatora Laboratoryjnego");
+                // wypisanie odpowiedzi dla Użytkownika
+                Console.Write(
+                    "\n\n\t\tNaciśnij dozwolony klawisz (A, B, C, D i X) dla wybrania jednej z oferowanych wunkcjonalności: ");
+                // wczytanie kodu naciśniętego klawisza
+                okWybranaFunkcjonalność = Console.ReadKey();
+                //rozpoznanie wybranej funkcjonalmości
+                Console.Clear();
+                switch (okWybranaFunkcjonalność.Key)
+                {
+                    case ConsoleKey.A: //potwierdzenie wybranej funkcjonalności
+                        Console.WriteLine(
+                            "\n\n\t\tWybrałeś funkcjonalność: A. Obliczenie średnej arytmetycznej wyrazów ciągu liczbowego");
+                        // deklaracja zmiennych 
+                        ushort okn; // liczność ciągu liczbowego
+                        float oka; // wyrazy ciągu liczbowego
+                        float okS; // dla sumy wyrazów
+                        float okSrArytm; // obliczenie średnej wartości 
+                        // wczytywanie wartości n
+                        do
+                        {
+                            // wypisanie zaproszenia liczności ciągu liczbowego
+                            okn = okWczytajLiczbęNaturalną("Liczność ciągu liczbowego");
+                            // sprawdzenie warunku wejściowego n > 0
+                            if (okn == 0)
+                                // sygnalizacja błędu 
+                                Console.WriteLine(
+                                    "\n\n\t\t\n\t\tError: podana liczność ciągu liczbowego nie jest poprawna!");
+                        } while (okn == 0);
+
+                        // deklaracja pomocnicza
+                        string okTextZaproszenie;
+                        // obliczenie sumy ciągu liczbowego S = a1 + a2 + ... + an
+                        okS = 0.0F; // początkowy stan obliczeń (warunek brzegowy)
+                        // iteracyjne obliczenie sumy wyrazów ciągu
+                        for (int oki = 1; oki <= okn; oki++)
+                        {
+                            // zredagowanie tekstu zaproszenia
+                            okTextZaproszenie = String.Format("wartość {0}-ą wyrazu ciągu liczbowego", oki);
+                            okWczytanieWartościLiczbyRzeczywistej(okTextZaproszenie, out oka);
+                            okS += oka;
+                        }
+
+                        // tutaj w zmiennej 'S' jest suma: S = a1 + a2 + a3
+                        okSrArytm = okS / okn;
+                        // w formacie stałopozycyjnym (fixed-point)
+                        Console.WriteLine(
+                            "\n\n\t\tWyniki obliczeń: średnia aryfmetyczna wyczytanuch {0} wyrazów ciągu liczbowego jest równa: {1, 6:F2}",
+                            okn, okSrArytm);
+                        // w formacie wykładniczym
+                        Console.WriteLine(
+                            "\n\n\t\tWyniki obliczeń: średnia aryfmetyczna wyczytanuch {0} wyrazów ciągu liczbowego jest równa: {1, 6:E2}",
+                            okn, okSrArytm);
+                        // w formacie ustawianym domyślnie na podstawie wartości wypisywanej wielkości
+                        Console.WriteLine(
+                            "\n\n\t\tWyniki obliczeń: średnia aryfmetyczna wyczytanuch {0} wyrazów ciągu liczbowego jest równa: {1, 6:G}",
+                            okn, okSrArytm);
+                        break;
+                    case ConsoleKey.B:
+                        Console.WriteLine(
+                            "\n\n\t Wybrałeś funkcjonalność: B. Obliczenie wartości wielomianu n-tego stopnia");
+                        /* 1) Kolejność danych wejściowych oraz ich typ danych
+                         - n stopień wielomianu typu ushort
+                         - X zmienna niezależna, typu float
+                         - an a(n-1) współczynniki wielomianu typu float
+                           2) Wynik obliczeń: wartość wielomianu W(X), typu float */
+                        // deklaracja zmiennych 
+                        // ushort n; jest już zadeklarowana powyżej
+                        float okx; // dla wartości zmiennej niezależnej X
+                        // float a; // też już zadeklarowana 
+                        float okWx; // dla obliczania wartości wielomianu
+                        okn = okWczytajLiczbęNaturalną("stopień wielomianu");
+                        // wczytanie wartości zmiennej niezależnej X
+                        okWczytanieWartościLiczbyRzeczywistej("wartość zmiennej niezależnej X", out okx);
+                        // iteracyjne wyznaczenie wartości wielomianu n-stopnia według schematu Hornera
+                        okWx = 0.0F; // warunek wejściowy
+                        for (int oki = 0; oki <= okn; oki++)
+                        {
+                            okTextZaproszenie = string.Format("wartość {0}-tego współczynnika 'a'", oki);
+                            // zredagowanie zaproszenia dla wartości i-tego wsp. wielomianu
+                            okWczytanieWartościLiczbyRzeczywistej(okTextZaproszenie, out oka);
+                            // iteracyjne wyznaczenie wartości wielomianu
+                            okWx = okWx * okx + oka;
+                        }
+
+                        // wypisanie wyniku obliczeń 
+                        Console.WriteLine(
+                            "\n\n\t\tWynik obliczeń: oblicznona wartość wielomianu {0}-ego stopnia dla zmiennej niezależnej X = {1, 5:F2}\n\t\t\t\t jest równa: W({1, 5:F2}) = {2, 6:F3}",
+                            okn, okx, okWx);
+                        break;
+                    case ConsoleKey.C:
+                        Console.WriteLine(
+                            "\n\n\tWybrałeś funkcjonalność: C. Obliczenie konwersji znakowego zapisu liczby na wartość");
+                        /* założenie projektowe
+                         1) dane wejściowe: znakowy zapis liczby w systemie dziesiętnym
+                         2) wynik konwersji: liczba wypisana znakowo w dwójkowym systemie liczbowym
+                         */
+                        // deklaracje 
+                        ushort okWartośćWczytanejLiczby; // dla przechowania znakowo wczytanej liczby na wartość 
+                        // znakowe wczytanie liczby naturalnej w systemie dziesiętnym i jej konwersja na wartość 
+
+                        okZnakoweWczytanieLiczbyNaturalnej("liczbę naturalną (od 0 do 65535)",
+                            out okWartośćWczytanejLiczby);
+                        // deklaracja pomocnicza
+                        string okZZL; // znakowy zapis liczby po konwersji 
+                        // konwersja liczby naturalnej na zapis znakowy w dwójkowym systemie liczbowym
+                        okKonwersjaLiczbyNaturalnejNaZnakowyZapisDwójkowy(okWartośćWczytanejLiczby, out okZZL);
+                        // wypisanie wyniku konwersji 
+                        Console.WriteLine(
+                            "\n\n\t\tWynik konwersji: podana liczba naturalna (w systemie dzisiętnym): {0} jest równoważna liczbie w systemie dwójkowym: {1}",
+                            okWartośćWczytanejLiczby, okZZL);
+                        break;
+                    case ConsoleKey.D:
+                        Console.WriteLine("\n\n\t Wybrałeś funkcjonalność: D. Obliczenie wartości symbolu Newtona");
+                        // deklaracje
+                        /* założenie projektowe
+                         1) dane wejściowe: n i k - liczby całkowite nieujemne, z warunkiem 0 <= k <= n
+                         2) wynik: obliczona wartość symbolu Newtona
+                         */
+                        ushort okk; // dla przechowywania argumentu k
+                        // ushort n; (już zadeklarowana)
+                        int okSymbolNewtona; // dla przechowywania wyniku
+                        do
+                        {
+                            okn = okWczytajLiczbęNaturalną("pierwszy argument n");
+                            okk = okWczytajLiczbęNaturalną("drugi argument k");
+                            // funkcja WczytajLiczbęNaturalną() zawsze wydaje nieujemne znaczenie, dlatego warunek 0 <= k upuszczam
+                            if (!(okk <= okn))
+                                Console.WriteLine("\n\n\t\tArgument k musi być mniejszy niż argument n");
+                            else
+                            {
+                                // warunek k <= n jest wykonany, dlatego obliczam symbol Newtona
+                                okSymbolNewtona = okSilnia(okn) / (okSilnia(okk) * okSilnia(okn - okk));
+                                Console.Write(
+                                    "\n\n\t\tWyniki obliczeń: symbol Newtonu dla arumentów n = {0} i k = {1} przyjmuje wartość {2}",
+                                    okn, okk, okSymbolNewtona);
+                                break;
+                            }
+                        } while (!(okk <= okn));
+
+                        break;
+                    case ConsoleKey.X:
+                        Console.WriteLine("\n\n\tWybrałeś X. Wyjście z kalkulatora Laboratoryjnego");
+                        break;
+                    default:
+                        Console.WriteLine("\n\n\t\tError: nacisnąłeś niedozwolony znak");
+                        break;
+                }
+
+                Console.Write("\n\n\n\t\tNaciśnij dowolny klawisz dla kontynuacji...");
+                Console.ReadKey();
+            } while (okWybranaFunkcjonalność.Key != ConsoleKey.X);
+        }
+
+        static void KalkulatorIndywidualny()
+        {
+            // deklaracja zmiennej identyfik. naciśninie klawisz
+            ConsoleKeyInfo okWybranaFunkcjonalność;
+            // wilekorotne powtarzanie obliczań wielkości matematycznych
+            do
+            {
+                Console.Clear();
+                // wypisanie Metryki Kalkulatora Indwywidualnego
+                Console.WriteLine("\n\t\tMENU Kalkulatora Indywidualnego");
+                Console.WriteLine("\n\n\t\tA. Obliczenie średniej harmonicznej wyrazów ciągu liczbowego");
+                Console.WriteLine("\n\n\t\tB. Obliczenie średniej kwadratowej wyrazów ciągu liczbowego");
+                Console.WriteLine(
+                    "\n\n\t\tC. Obliczenie średniej potęgowej (średnej uogólnionej) wyrazów ciągu liczbowego");
+                Console.WriteLine("\n\n\t\tD. Obliczenie średniej geometrycznej wyrazów ciągu liczbowego");
+                Console.WriteLine(
+                    "\n\n\t\tE. Obliczenie ceny jednostki paszy (według średniej ważonej) składającej się \n\t\t(utworzonej, skomponowanej) z kilku składników");
+                Console.WriteLine(
+                    "\n\n\t\tF. Konwersja znakowego zapisu liczby naturalnej w systemie liczbowym o podstawie\n\t\t 'p' na liczbę naturalną zapisaną znakowo w systemie liczbowym o podstawie liczbowej 'q'");
+                Console.WriteLine("\n\n\t\tX. Wyjście z kalkulatora Indwywidualnego");
+                // wypisanie odpowiedzi dla Użytkownika
+                Console.Write(
+                    "\n\n\t\tNaciśnij dozwolony klawisz (A-F i X) dla wybrania jednej z oferowanych funkcjonalności: ");
+                // wczytanie kodu naciśniętego klawisza
+                okWybranaFunkcjonalność = Console.ReadKey();
+                //rozpoznanie wybranej funkcjonalmości
+                Console.Clear();
+
+                switch (okWybranaFunkcjonalność.Key)
+                {
+                    case ConsoleKey.A: //potwierdzenie wybranej funkcjonalności
+                        Console.WriteLine(
+                            "\n\n\t\tWybrałeś funkcjonalność: A. Obliczenie średnej harmonicznej wyrazów ciągu liczbowego");
+
+                        // deklaracja zmiennych
+                        ushort okn; // liczność ciągu liczbowego
+                        float oka; // dla przechowywania wartości wyrazów a1, a2, ..., an ciągu liczbowego
+                        float okSrH; // wynik obliczeń
+                        // deklaracje pomocnicze
+                        string okTextZaproszenie; // dla napisania zaproszenia 
+                        float okZnaczenieMianownika; // zmienna będzie przechowywała sumę wyrazów mianownika
+
+                        // wczytywanie wartości n
+                        okn = okWczytajLiczbęNaturalną("liczność ciągu liczbowego");
+                        okZnaczenieMianownika = 0.0F;
+                        for (int oki = 1; oki <= okn; oki++)
+                        {
+                            // zredagowanie tekstu zaproszenia
+                            okTextZaproszenie = String.Format("wartość {0}-ą wyrazu ciągu liczbowego", oki);
+                            oka = okWczytajLiczbęNaturalną(okTextZaproszenie);
+                            okZnaczenieMianownika += 1 / oka; // obliczenie znaczenia mianownika wyrazu
+                        }
+
+                        okSrH = okn / okZnaczenieMianownika; // obliczenie średniej harmonicznej 
+                        Console.WriteLine(
+                            "\n\n\t\tWynik obliczeń: wartość średniej harmonicznej jest równa: {0, 6:F2}", okSrH);
+                        break;
+                    case ConsoleKey.B:
+                        Console.WriteLine(
+                            "\n\n\t\tWybrałeś funkcjonalność: B. Obliczenie średniej kwadratowej wyrazów ciągu liczbowego");
+                        // deklaracje zmiennych
+                        double okSrKw; // wynik obliczeń
+                        // ushort n, float a, textZaproszenie - już są stworzone we bloku funkcjonalności A;
+                        // deklaracje pomocnicze
+                        double okZnaczenieLicznika = 0.0; // zmienna będzie przechowywała sumę wyrazów licznika
+
+                        okn = okWczytajLiczbęNaturalną("liczność ciągu liczbowego");
+                        for (int oki = 1; oki <= okn; oki++)
+                        {
+                            // zredagowanie tekstu zaproszenia
+                            okTextZaproszenie = String.Format("wartość {0}-ą wyrazu ciągu liczbowego", oki);
+                            do // sprawdzenie warunku a != 0
+                            {
+                                okWczytanieWartościLiczbyRzeczywistej(okTextZaproszenie, out oka);
+                                okTextZaproszenie = String.Format("poniwnie wartość {0}-ą wyrazu ciągu liczbowego, biorąc do uwagi warunek a != 0", oki);
+                            } while (oka == 0);
+
+                            okZnaczenieLicznika += oka * oka; // obliczenie znaczenia licznika wyrazu
+                        }
+
+                        okSrKw = Math.Pow(okZnaczenieLicznika / okn, 1.0 / 2.0); // obliczenie średniej kwadratowej
+                        Console.WriteLine(
+                            "\n\n\t\tWynik obliczeń: wartość średniej kwadratowej jest równa: {0, 6:F2}", okSrKw);
+                        break;
+                    case ConsoleKey.C:
+                        Console.WriteLine(
+                            "\n\n\t\tWybrałeś funkcjonalność: C. Obliczenie średniej potęgowej (średnej uogólnionej) wyrazów ciągu liczbowego");
+                        // deklaracje zmiennych 
+                        ushort okk; // dla potęgi k
+                        double okSrPot; // dla wyniku obliczeń
+                        // ushort okn(dla liczności ciągu), float oka(dla ciągu a1, a2, ..., an), okTextZaproszenie oraz okZnaczenieLicznika - już są stworzone we bloku funkcjonalności A i B;
+                        okn = okWczytajLiczbęNaturalną("liczność ciągu liczbowego");
+                        okk = okWczytajLiczbęNaturalną("znaczenie rzędu k");
+                        okZnaczenieLicznika = 0.0;
+                        for (int oki = 1; oki <= okn; oki++)
+                        {
+                            // zredagowanie tekstu zaproszenia
+                            okTextZaproszenie = String.Format("wartość {0}-ą wyrazu ciągu liczbowego", oki);
+                            do 
+                            { // sprawdzenie warunku a != 0
+                                okWczytanieWartościLiczbyRzeczywistej(okTextZaproszenie, out oka);
+                                okTextZaproszenie = String.Format("poniwnie wartość {0}-ą wyrazu ciągu liczbowego, biorąc do uwagi warunek a != 0", oki);
+                            } while (oka == 0);
+                            okZnaczenieLicznika += Math.Pow(oka, okk); // obliczenie licznika danego wyrazu
+                        }
+
+                        okSrPot = Math.Pow(okZnaczenieLicznika / okn, 1.0 / okk); // obliczenie średniej potęgowej
+                        Console.WriteLine(
+                            "\n\n\t\tWynik obliczeń: średnia potęgowa (średnia uogólniona) jest równa {0, 6:F2}",
+                            okSrPot);
+                        break;
+                    case ConsoleKey.D:
+                        Console.WriteLine(
+                            "\n\n\t\tWybrałeś funkcjonalność: D. Obliczenie średniej geometrycznej wyrazów ciągu liczbowego");
+                        // deklaracja zmiennych
+                        double okSrGeom; // dla wyniku obliczeń
+                        // ushort okn(dla liczności ciągu) oraz float oka(dla ciągu a1, a2, ..., an) - są już zadeklarowane w bloku funkcjonalności A
+                        // deklaracje pomocnicze
+                        float okIloczyn = 1; // dla obliczenia wyrazu pod pierwiastkiem
+
+                        okn = okWczytajLiczbęNaturalną("liczność ciągu liczbowego");
+                        for (int oki = 1; oki <= okn; oki++)
+                        {
+                            // zredagowanie tekstu zaproszenia
+                            okTextZaproszenie = String.Format("wartość {0}-ą wyrazu ciągu liczbowego", oki);
+                            okWczytanieWartościLiczbyRzeczywistej(okTextZaproszenie, out oka);
+                            okIloczyn *= oka; // obliczenie iloczynu wyrazu pod pierwiastkiem 
+                        }
+
+                        okSrGeom = Math.Pow(okIloczyn, 1.0 / okn);
+                        Console.WriteLine(
+                            "\n\n\t\tWynik obliczeń: średnia geometryczna wyrazów ciągu liczbowego jest równa {0, 6:F2}",
+                            okSrGeom);
+                        break;
+                    case ConsoleKey.E:
+                        Console.WriteLine(
+                            "\n\n\t\tWybrałeś funkcjonalność: E. Obliczenie ceny jednostki paszy (według średniej ważonej) składającej się \n\t\t(utworzonej, skomponowanej) z kilku składników");
+                        // deklaracja zmiennych 
+                        double okCenaJednostkiPaszy; // dla wyniku obliczeń
+                        float okm; // dla ciągu składników o masie m1, m2, ..., mn
+                        float okc; // dla ciągi składników o cenie c1, c2, ..., cn
+                        // ushort okn - dla liczności składników - już zadeklarowana powyżej
+                        // deklaracje pomocnicze 
+                        float okOgólnaMasaSkładników = 0.0F;
+                        float okOgólnaCenaSkładników = 0.0F;
+                        okn = okWczytajLiczbęNaturalną("liczność składników");
+                        for (int oki = 1; oki <= okn; oki++)
+                        {
+                            // zredagowanie tekstu zaproszenia na otrzymanie masy składnika
+                            okTextZaproszenie = String.Format("masę {0}-ego składnika", oki);
+                            do 
+                            { // sprawdzenie warunku masa > 0
+                                okWczytanieWartościLiczbyRzeczywistej(okTextZaproszenie, out okm);
+                                okTextZaproszenie = String.Format("ponownie masę, większą od zera, {0}-ego składnika", oki);
+                            } while (okm <= 0);
+                            // zredagowanie tekstu zaproszenia na otrzymanie ceny składnika
+                            okTextZaproszenie = String.Format("cenę {0}-ego składnika", oki);
+                            do 
+                            { // sprawdzenie warunku cena > 0
+                                okWczytanieWartościLiczbyRzeczywistej(okTextZaproszenie, out okc);
+                                okTextZaproszenie = String.Format("ponownie cenę, większą od zera, {0}-ego składnika", oki);
+                            } while (okc <= 0);
+                            okOgólnaMasaSkładników += okm; // obliczenie ogólnej masy składników(mianownika wyrazu)
+                            okOgólnaCenaSkładników += okm * okc; // obliczenie ogólnej ceny składników(licznika wyrazu)
+                        }
+
+                        okCenaJednostkiPaszy = okOgólnaCenaSkładników / okOgólnaMasaSkładników;
+                        Console.WriteLine(
+                            "\n\n\t\tWynik obliczeń: cena jednostki paszy składającej się z kilku {0} składników jest równa {1, 6:F2}",
+                            okn, okCenaJednostkiPaszy);
+                        break;
+                // zatrzymanie 
+                Console.Write("\n\n\n\t\tNaciśnij dowolny klawisz dla kontynuacji...");
+                Console.ReadKey();
+            } while (okWybranaFunkcjonalność.Key != ConsoleKey.X);
+        }
+
+        #endregion
+
+        #region Metody pomocnicze dla Kalkulatora Laboratoryjnego
+
+        static void okZnakoweWczytanieLiczbyNaturalnej(string oktextZaproszenia, out ushort okL)
+        {
+            //deklaracja zmiennych
+            byte okp = 10;
+            int okN;
+            string okZZL;
+            char okCyfra; // dla przechowania pojedynczej cyfry
+            // wypisanie zaproszenia dla podania liczby do konwersji
+
+            Console.Write("\n\t\tPodaj " + oktextZaproszenia + ": ");
+            // wczytanie liczby znakowej
+            okZZL = Console.ReadLine();
+            // usuwanie tzw. białych znaków (np. spacji)
+            okZZL = okZZL.Trim();
+            // określenie (odczytywanie) liczby znaków liczby ZZL
+            okN = okZZL.Length;
+            // konwersja znakowego zapisu liczby na wartość według schematu Hornera
+            okL = 0;
+            for (int oki = 0; oki < okN; oki++)
+            {
+                okCyfra = okZZL[oki]; // pobranie i-tego znaku zmiennej ZZL
+                // sprawdzenie czy pobrany znak jest cyfrą systemu liczbowego o podstawie p = 10
+
+                if ((okCyfra >= '0') && (okCyfra <= '9'))
+                {
+                    // dokonujemy konwersji
+                    okL = (ushort)(okL * okp + ((byte)okCyfra - (byte)'0'));
+                }
+                else
+                {
+                    // jest błąd
+                    Console.WriteLine(
+                        "\n\n\t\tError: w podanej liczbie wystąpił znak, który nie jest cyfrą w dzisiętnym systemie liczbowym");
+                    // awaryjne ustalenie wartości po konwersji
+                    okL = 0;
+                    // przerwanie konwersji i wyjście z danej metody
+                    return; // lub brak
+                }
+            }
+        }
+
+
+        // deklaracja metody WczytajLiczbęNaturalną
+        static ushort okWczytajLiczbęNaturalną(string oktextZaproszenie)
+        {
+            // deklaracja zmiennych
+            ushort okn; // dla przechowywania liczby naturalnej
+            string okZaproszenie; // dla zredagowania treści (pełnego zdania) zaproszenia do podania liczby naturalnej 
+            // deklaracja pomocnicza
+            string okInput; // dla przechowywania wartości n, w typie string
+            // wypisanie zaproszenia 
+            okZaproszenie = "\n\t\tPodaj " + oktextZaproszenie + ": ";
+            Console.Write(okZaproszenie);
+            // wczytanie wartości liczby naturalnej
+
+            while (true)
+            {
+                okInput = Console.ReadLine();
+                if (ushort.TryParse(okInput, out okn))
+                    if (okn > 0) // dodatkowy warunek n > 0 (dla naturalnych liczb)
+                        return okn;
+                    else
+                    {
+                        Console.WriteLine("\n\n\t\tError: liczba naturalna musi być większą od zera!");
+                        okZaproszenie = "\n\t\tPodaj ponownie " + oktextZaproszenie + ": ";
+                        // ponownie wypisanie zaproszenia 
+                        Console.Write(okZaproszenie);
+                    }
+                else
+                {
+                    // sygnalizacja błędu
+                    Console.WriteLine(
+                        "\n\n\t\tError: zapis mieści niedozwolony znak!");
+                    okZaproszenie = "\n\t\tPodaj ponownie " + oktextZaproszenie + ": ";
+                    // ponownie wypisanie zaproszenia 
+                    Console.Write(okZaproszenie);
+                }
+            }
+        }
+
+        static void okWczytanieWartościLiczbyRzeczywistej(string oktextZaproszenia, out float oka)
+        {
+            // wypisanie zaproszenia liczby rzeczysitej
+            Console.Write("\n\t\tPodaj " + oktextZaproszenia + ": ");
+            // wczytanie liczby rzeczywistej 
+            while (!float.TryParse(Console.ReadLine(), out oka))
+            {
+                //sygnalizacja błędu
+                Console.WriteLine(
+                    "\n\n\t\tError: w zapisie liczby rzeczywistej wystąpił niedozwolony znak!");
+                // ponownie wypisywanie zaproszenia
+                Console.Write("\n\t\tPodaj ponownie" + oktextZaproszenia + ": ");
+            }
+        }
+
+        static void okKonwersjaLiczbyNaturalnejNaZnakowyZapisDwójkowy(ushort okL, out string okZZL)
+        {
+            // deklaracje
+            const int okq = 2;
+            ushort okN = 0; // liczba reszt
+            string okSchowekReszt = "";
+            byte okReszta;
+            while (okL > 0)
+            {
+                // obliczenie reszty z dzielenia przez 'q'
+                okReszta = (byte)(okL % okq);
+                // przechowanie (dodanie reszty do SchowekReszt)
+                okSchowekReszt = okSchowekReszt + (char)(okReszta + (byte)'0');
+                // wyznacznie następnej wartości 
+                okL = (ushort)(okL / okq);
+                // zwiększzenie licznika reszt
+                okN++;
+            }
+
+            // wyzerewanie parametrów ZZL
+            okZZL = "";
+            // przepisanie reszt z dzielenia w odwrotnej kolejności do parametru ZZL
+            for (int oki = okN - 1; oki >= 0; oki--)
+            {
+                okZZL += okSchowekReszt[oki];
+            }
+        }
+
+        static int okSilnia(int oki)
+            /* 1) gdy znaczenie i jest równe 0: zwrócić 1
+               2) a inaczej: znaleźć iloczyn rekursywnego powrotu funkckcji Silnia od (i - 1) i znaczenia i */
+        {
+            if (oki == 0)
+                return 1;
+            else
+                return oki * okSilnia(oki - 1);
+        }
+
+        #endregion
+    }
+}
