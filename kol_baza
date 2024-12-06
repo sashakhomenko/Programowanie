@@ -1,0 +1,74 @@
+-- dodanie columny pesel do tabeli osoba
+ALTER TABLE osoba ADD PESEL CHAR(11);
+-- 4
+-- utworzenie znaczenia pesela dla każdej osoby (metody cast pozwalają ominać znaki '-' w dacie)
+UPDATE osoba SET PESEL = CONCAT(
+SUBSTRING(CAST(data_u AS CHAR), 1, 4), 
+SUBSTRING(CAST(data_u AS CHAR), 6, 2), 
+SUBSTRING(CAST(data_u AS CHAR), 9, 2),
+CASE 
+WHEN gender IN ('Ms', 'Mrs.', 'Pani') THEN '2'
+WHEN gender IN ('Mr', 'Pan') THEN '1'
+END,
+'06'
+);
+-- dodanie PK do tablicy osoba
+ALTER TABLE osoba ADD id_osoba INT IDENTITY PRIMARY KEY;
+-- utworzenie pomocniczej tabeli TEM_TABLE, która będzie chroniła wszyskie imiona i nazwiska w jedenj columnie
+CREATE TABLE TEMP_TABLE (
+nazwa varchar(40) 
+);
+-- 
+INSERT INTO TEMP_TABLE (NAZWA) SELECT imie_1 from osoba;
+INSERT INTO TEMP_TABLE (NAZWA) SELECT nazwisko from osoba;
+SELECT DISTINCT nazwa INTO nazwa FROM TEMP_TABLE;
+
+ALTER TABLE nazwa ADD id_nazwa INT IDENTITY PRIMARY KEY;
+
+CREATE TABLE dana (
+    id_dana int PRIMARY KEY IDENTITY,
+    id_nazwa int,
+    id_opis int,
+    id_osoba int,
+    FOREIGN KEY (id_nazwa) REFERENCES nazwa(id_nazwa),
+    FOREIGN KEY (id_osoba) REFERENCES osoba(id_osoba)
+);
+
+INSERT INTO dana (id_nazwa, id_opis, id_osoba) 
+SELECT nazwa.id_nazwa, 1, osoba.id_osoba
+from osoba join nazwa on osoba.imie_1 = nazwa.nazwa;
+
+INSERT INTO dana (id_nazwa, id_opis, id_osoba) 
+SELECT nazwa.id_nazwa, 2, osoba.id_osoba
+from osoba join nazwa on osoba.nazwisko = nazwa.nazwa;
+
+select * from dana;
+select * from nazwa;
+
+-- 5
+CREATE TABLE LICZBA_KOBIET_PL71506(
+grupa int, 
+liczba_kobiet int
+);
+
+INSERT INTO LICZBA_KOBIET_PL71506 (grupa, liczba_kobiet)
+SELECT DATEDIFF(YEAR, data_u, GETDATE()), COUNT(*)
+FROM osoba WHERE gender IN ('Ms', 'Mrs.', 'Pani') GROUP BY DATEDIFF(YEAR, data_u, GETDATE());
+
+SELECT * FROM LICZBA_KOBIET_PL71506
+
+-- 6
+CREATE TABLE tytuł_naukowy(
+id_tytuł_naukowy INT IDENTITY PRIMARY KEY,
+nazwa VARCHAR(60) NOT NULL
+);
+CREATE TABLE historia_tutułu(
+	id_historia INT IDENTITY PRIMARY KEY,
+	id_osoba INT NOT NULL, 
+	id_tytuł_naukowy INT NOT NULL,
+	data_uzyskania DATE NOT NULL
+	FOREIGN KEY (id_osoba) REFERENCES osoba (id_osoba),
+	FOREIGN KEY (id_tytuł_naukowy) REFERENCES tytuł_naukowy (id_tytuł_naukowy)
+);
+INSERT INTO tytuł_naukowy (nazwa) values ('Matematyczne zasady filosofii naturalnej');
+INSERT INTO historia_tutułu (id_osoba, id_tytuł_naukowy, data_uzyskania) values (4, 1, GETDATE());
