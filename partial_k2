@@ -1,0 +1,108 @@
+1. CREATE VIEW sell_71506 AS
+SELECT 
+    ps1.id_product AS product_1,
+    ps2.id_product AS product_2,
+    s.year,
+    s.month,
+    SUM(p1.price + p2.price) AS total_revenue
+FROM 
+    orders o1
+JOIN 
+    orders o2 ON o1.id_orders_info = o2.id_orders_info AND o1.id_product < o2.id_product
+JOIN 
+    product p1 ON o1.id_product = p1.id_product
+JOIN 
+    product p2 ON o2.id_product = p2.id_product
+JOIN 
+    product_seller ps1 ON p1.id_product = ps1.id_product
+JOIN 
+    product_seller ps2 ON p2.id_product = ps2.id_product
+JOIN 
+    seller s ON ps1.id_seller = s.id_seller AND ps2.id_seller = s.id_seller
+GROUP BY 
+    ps1.id_product, ps2.id_product, s.year, s.month
+
+2. ALTER FUNCTION dbo.CzyIstniejeSeller(@ID INT)
+RETURNS BIT
+AS
+BEGIN
+    DECLARE @Exists BIT;
+    SELECT @Exists = CASE WHEN EXISTS (SELECT 1 FROM seller WHERE id_student = @ID) THEN 1 ELSE 0 END;
+    RETURN @Exists;
+END;
+3. -- Create Account_A table
+CREATE TABLE Account_A (
+    id_account_A INT PRIMARY KEY,
+    Value FLOAT NOT NULL,
+    id_person INT NOT NULL
+);
+
+-- Create Account_B table
+CREATE TABLE Account_B (
+    id_account_B INT PRIMARY KEY,
+    Value FLOAT NOT NULL,
+    id_person INT NOT NULL
+);
+
+-- Create From table
+CREATE TABLE From_Table (
+    Bank_id INT,
+    id_account_A INT,
+    id_account_B INT,
+    transfer_amount FLOAT NOT NULL,
+    time DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (id_account_A) REFERENCES Account_A(id_account_A),
+    FOREIGN KEY (id_account_B) REFERENCES Account_B(id_account_B)
+);
+
+-- Create To table
+CREATE TABLE To_Table (
+    Bank_id INT,
+    id_account_A INT,
+    id_account_B INT,
+    transfer_amount FLOAT NOT NULL,
+    time DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (id_account_A) REFERENCES Account_A(id_account_A),
+    FOREIGN KEY (id_account_B) REFERENCES Account_B(id_account_B)
+);
+go
+ALTER TRIGGER transfer_trigger
+ON From_Table
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Insert into To_Table
+    INSERT INTO To_Table (Bank_id, id_account_A, id_account_B, transfer_amount, time)
+    SELECT Bank_id, id_account_A, id_account_B, transfer_amount, GETDATE()
+    FROM Inserted;
+
+    -- Update Account_A (deduct amount)
+    UPDATE Account_A
+    SET Value = Value - Inserted.transfer_amount
+    FROM Account_A
+    INNER JOIN Inserted ON Account_A.id_account_A = Inserted.id_account_A;
+
+    -- Update Account_B (add amount)
+    UPDATE Account_B
+    SET Value = Value + Inserted.transfer_amount
+    FROM Account_B
+    INNER JOIN Inserted ON Account_B.id_account_B = Inserted.id_account_B;
+END;
+go
+-- Add accounts to Account_A and Account_B
+INSERT INTO Account_A (id_account_A, Value, id_person) VALUES (1, 1000.00, 101);
+INSERT INTO Account_B (id_account_B, Value, id_person) VALUES (2, 500.00, 102);
+
+-- Insert a transfer record into From_Table
+INSERT INTO From_Table (Bank_id, id_account_A, id_account_B, transfer_amount)
+VALUES (1, 1, 2, 200.00);
+
+-- Verify the balances
+SELECT * FROM Account_A;
+SELECT * FROM Account_B;
+
+-- Verify the logs
+SELECT * FROM From_Table;
+SELECT * FROM To_Table;
