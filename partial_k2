@@ -106,3 +106,39 @@ SELECT * FROM Account_B;
 -- Verify the logs
 SELECT * FROM From_Table;
 SELECT * FROM To_Table;
+
+
+2(2). WITH your_products AS (
+    SELECT DISTINCT 
+        ps.id_product, 
+        s.year, 
+        s.month
+    FROM product_seller ps
+    JOIN seller s ON ps.id_seller = s.id_seller
+    WHERE s.id_student = 71506
+),
+common_products AS (
+    SELECT DISTINCT 
+        ps.id_seller, 
+        s.Surname, 
+        s.name, 
+        s.year, 
+        s.month, 
+        ps.id_product
+    FROM product_seller ps
+    JOIN seller s ON ps.id_seller = s.id_seller
+    WHERE (ps.id_product, s.year, s.month) IN (
+        SELECT id_product, year, month
+        FROM your_products
+    ) AND s.id_student != 71506
+)
+SELECT 
+    cp.id_seller AS 'ID Sprzedawcy', 
+    cp.Surname AS 'Nazwisko', 
+    cp.name AS 'Imię', 
+    COUNT(DISTINCT cp.id_product) AS 'Liczba wspólnych produktów',
+    cp.year AS 'Rok', 
+    cp.month AS 'Miesiąc'
+FROM common_products cp
+GROUP BY cp.id_seller, cp.Surname, cp.name, cp.year, cp.month
+ORDER BY 'Liczba wspólnych produktów' DESC;
